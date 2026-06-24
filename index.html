@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Tech Portfolio</title>
+    <!-- Tailwind CSS for layout aur styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Orbitron aur Share Tech Mono high-tech feel ke liye -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons ke liye -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Variables for Neon Theme */
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-blue: #0066ff;
+            --bg-color: #050505;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .brand-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Background Canvas Styling */
+        #binary-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.3; /* Thoda transparent rakha hai taki text read ho sake */
+        }
+
+        /* Glassmorphism & Neon Glow Classes */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan);
+        }
+
+        .neon-btn {
+            position: relative;
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+            transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .neon-btn:hover {
+            background: var(--neon-cyan);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+        }
+
+        /* Profile Photo Upload Styling */
+        .profile-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            margin: 0 auto;
+            border: 4px solid var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px var(--neon-cyan);
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-container:hover {
+            box-shadow: 0 0 40px var(--neon-cyan), inset 0 0 40px var(--neon-cyan);
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        .upload-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--neon-cyan);
+            transform: translateY(100%);
+            transition: 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .profile-container:hover .upload-overlay {
+            transform: translateY(0);
+        }
+
+        /* Typing cursor animation */
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 24px;
+            background-color: var(--neon-cyan);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Scrollbar hide/style */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan);
+            border-radius: 4px;
+        }
+
+        /* --- HIGH-TECH ENHANCEMENTS CSS --- */
+        
+        @media (pointer: fine) {
+            body { cursor: none; }
+        }
+        .cursor-dot {
+            width: 6px; height: 6px; background: var(--neon-cyan);
+            position: fixed; border-radius: 50%; pointer-events: none;
+            z-index: 100000; transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); 
+            transition: width 0.2s, height 0.2s;
+        }
+        .cursor-outline {
+            width: 30px; height: 30px; border: 1px solid rgba(0, 243, 255, 0.5);
+            position: fixed; border-radius: 50%; pointer-events: none;
+            z-index: 99999; transform: translate(-50%, -50%);
+            transition: 0.1s ease-out; box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+        a:hover ~ .cursor-dot, button:hover ~ .cursor-dot, .profile-container:hover ~ .cursor-dot, input:hover ~ .cursor-dot {
+            width: 15px; height: 15px; background: white; box-shadow: 0 0 15px white;
+        }
+
+        /* Terminal Boot Screen Overlay */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #020202; z-index: 999999; display: flex;
+            flex-direction: column; justify-content: center; padding: 2rem;
+            font-family: 'Share Tech Mono', monospace; color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        /* Glitch Text Effect */
+        .glitch-wrapper { position: relative; display: inline-block; }
+        .glitch { position: relative; z-index: 1; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent; z-index: -1; pointer-events: none;
+        }
+        .glitch::before {
+            left: 3px; text-shadow: -2px 0 #ff003c; 
+            clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -3px; text-shadow: -2px 0 #00f3ff;
+            clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 3s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 31px, 0); transform: skew(0.8deg); }
+            5% { clip: rect(70px, 9999px, 71px, 0); transform: skew(0.3deg); }
+            10% { clip: rect(31px, 9999px, 91px, 0); transform: skew(0.5deg); }
+            15% { clip: rect(40px, 9999px, 60px, 0); transform: skew(0.1deg); }
+            20% { clip: rect(15px, 9999px, 30px, 0); transform: skew(0.9deg); }
+            100% { clip: rect(10px, 9999px, 31px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.1deg); }
+            5% { clip: rect(5px, 9999px, 30px, 0); transform: skew(0.8deg); }
+            10% { clip: rect(45px, 9999px, 60px, 0); transform: skew(0.3deg); }
+            15% { clip: rect(20px, 9999px, 50px, 0); transform: skew(0.5deg); }
+            20% { clip: rect(80px, 9999px, 95px, 0); transform: skew(0.2deg); }
+            100% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0deg); }
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal { opacity: 0; transform: translateY(40px) scale(0.95); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* 3D Tilt Card Container */
+        .tilt-card { transform-style: preserve-3d; transform: perspective(1000px); }
+        .tilt-card-content { transform: translateZ(40px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- System Boot Screen -->
+    <div id="boot-screen">
+        <div class="max-w-4xl w-full mx-auto md:text-xl">
+            <div id="boot-text" class="whitespace-pre-wrap"></div>
+            <div class="mt-2 inline-block w-3 h-5 bg-cyan-400 animate-pulse"></div>
+        </div>
+    </div>
+
+    <!-- Background Binary Canvas -->
+    <canvas id="binary-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 brand-font text-2xl font-bold neon-text cursor-pointer">
+                    SYS_ADMIN<span class="text-white text-shadow-none">.exe</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="hover:text-cyan-400 transition duration-300">Home</a>
+                        <a href="#about" class="hover:text-cyan-400 transition duration-300">About</a>
+                        <a href="#experience" class="hover:text-cyan-400 transition duration-300">Experience</a>
+                        <a href="#skills" class="hover:text-cyan-400 transition duration-300">Skills</a>
+                        <a href="#projects" class="hover:text-cyan-400 transition duration-300">Projects</a>
+                        <a href="#contact" class="hover:text-cyan-400 transition duration-300">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-4">
+        <div class="text-center z-10 w-full max-w-4xl">
+            
+            <!-- Profile Picture with Upload Option -->
+            <div class="relative inline-block mb-8">
+                <!-- Hidden file input -->
+                <input type="file" id="profile-upload" class="hidden" accept="image/*">
+                <!-- Profile Container -->
+                <div class="profile-container" onclick="document.getElementById('profile-upload').click()">
+                    <!-- Default image (User can change this) -->
+                    <img id="profile-pic" src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=500&auto=format&fit=crop" alt="Profile" class="profile-pic">
+                    <div class="upload-overlay brand-font">
+                        <i class="fas fa-camera mr-2"></i> UPDATE
+                    </div>
+                </div>
+                <!-- Glowing rings behind the image -->
+                <div class="absolute inset-0 rounded-full border border-cyan-500 animate-ping opacity-20" style="animation-duration: 3s;"></div>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 brand-font tracking-wider glitch-wrapper">
+                <span class="glitch" data-text="HI, MAIN CODER HOON">HI, MAIN <span class="neon-text">CODER</span> HOON</span>
+            </h1>
+            <div class="text-xl md:text-3xl text-gray-300 mb-8 h-10">
+                > <span id="typing-text"></span><span class="typing-cursor"></span>
+            </div>
+            
+            <div class="flex justify-center space-x-6 flex-wrap gap-y-4">
+                <a href="#projects" class="neon-btn px-8 py-3 rounded uppercase font-bold tracking-widest text-sm brand-font">
+                    <i class="fas fa-folder-open mr-2"></i> Data Access
+                </a>
+                <a href="#" class="px-8 py-3 rounded uppercase font-bold tracking-widest text-sm brand-font border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black transition duration-300">
+                    <i class="fas fa-download mr-2"></i> Resume
+                </a>
+                <a href="#contact" class="px-8 py-3 rounded uppercase font-bold tracking-widest text-sm brand-font border border-gray-600 hover:border-cyan-400 hover:text-cyan-400 transition duration-300 bg-gray-900 bg-opacity-50">
+                    <i class="fas fa-network-wired mr-2"></i> Connect
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 z-10 relative reveal">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center brand-font neon-text">_ABOUT_ME</h2>
+            <div class="glass-panel p-8 rounded-lg md:flex items-center gap-10">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <!-- Tech graphic/placeholder -->
+                    <div class="w-full h-64 border border-cyan-800 rounded bg-black flex items-center justify-center overflow-hidden relative group">
+                        <div class="absolute inset-0 bg-cyan-900 opacity-20 group-hover:opacity-40 transition duration-500"></div>
+                        <i class="fas fa-microchip text-6xl text-cyan-600 group-hover:text-cyan-400 transition duration-500 group-hover:scale-110"></i>
+                        <div class="absolute bottom-2 right-2 text-xs text-cyan-800">SYSTEM.CORE.READY</div>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl brand-font mb-4 text-cyan-300">System Initialization...</h3>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        Hello! Main ek passionate full-stack developer hoon jo high-performance applications aur futuristic UIs banane mein expert hai. Mera code clean, optimized aur scalable hota hai.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Frontend se lekar backend tak, mujhe complex problems ko solve karna aur unhe visually stunning experiences mein convert karna pasand hai. Let's build the future together.
+                    </p>
+
+                    <!-- Detailed Profile Info -->
+                    <ul class="text-gray-300 mb-8 space-y-3 border-l-2 border-cyan-800 pl-4 font-sans tracking-wide">
+                        <li><strong class="text-cyan-400 brand-font mr-2">ID_NAME:</strong> Alex "Neo" Anderson</li>
+                        <li><strong class="text-cyan-400 brand-font mr-2">LEVEL:</strong> Senior Architect (5+ Yrs)</li>
+                        <li><strong class="text-cyan-400 brand-font mr-2">CLASS:</strong> Full-Stack & Security Tech</li>
+                        <li><strong class="text-cyan-400 brand-font mr-2">LANGUAGES:</strong> English, Hindi, Binary</li>
+                    </ul>
+
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-gray-900 bg-opacity-60 p-3 rounded border border-gray-800">
+                            <span class="text-cyan-500 font-bold">STATUS:</span> Online & Ready
+                        </div>
+                        <div class="bg-gray-900 bg-opacity-60 p-3 rounded border border-gray-800">
+                            <span class="text-cyan-500 font-bold">LOCATION:</span> Cyberspace
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline Section -->
+    <section id="experience" class="py-20 px-4 z-10 relative reveal">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center brand-font neon-text">_TIMELINE_LOGS</h2>
+            <div class="relative border-l-2 border-cyan-800 ml-4 md:ml-10">
+                
+                <!-- Log 1 -->
+                <div class="mb-10 ml-8 glass-panel p-6 rounded-lg relative group">
+                    <div class="absolute -left-[41px] top-5 w-5 h-5 bg-black border-2 border-cyan-500 rounded-full group-hover:bg-cyan-500 transition duration-300 shadow-[0_0_10px_#00f3ff]"></div>
+                    <h3 class="text-2xl font-bold brand-font text-white mb-1">Lead Cyber Developer</h3>
+                    <h4 class="text-cyan-400 text-sm font-bold mb-3 tracking-widest">NEXUS CORP <span class="text-gray-500 ml-2">| 2023 - PRESENT</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">System architecture design, neural network integration, and leading a squad of 5 elite coders to build secure quantum-ready web platforms.</p>
+                </div>
+
+                <!-- Log 2 -->
+                <div class="mb-10 ml-8 glass-panel p-6 rounded-lg relative group">
+                    <div class="absolute -left-[41px] top-5 w-5 h-5 bg-black border-2 border-cyan-500 rounded-full group-hover:bg-cyan-500 transition duration-300 shadow-[0_0_10px_#00f3ff]"></div>
+                    <h3 class="text-2xl font-bold brand-font text-white mb-1">Full-Stack Engineer</h3>
+                    <h4 class="text-cyan-400 text-sm font-bold mb-3 tracking-widest">SYNTAX DYNAMICS <span class="text-gray-500 ml-2">| 2020 - 2023</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">Developed high-performance REST APIs, real-time data visualizers, and optimized database queries reducing load time by 40%.</p>
+                </div>
+
+                <!-- Log 3 -->
+                <div class="mb-0 ml-8 glass-panel p-6 rounded-lg relative group">
+                    <div class="absolute -left-[41px] top-5 w-5 h-5 bg-black border-2 border-cyan-500 rounded-full group-hover:bg-cyan-500 transition duration-300 shadow-[0_0_10px_#00f3ff]"></div>
+                    <h3 class="text-2xl font-bold brand-font text-white mb-1">Junior Web Developer</h3>
+                    <h4 class="text-cyan-400 text-sm font-bold mb-3 tracking-widest">INITIATIVE ZERO <span class="text-gray-500 ml-2">| 2018 - 2020</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">Started journey by building responsive UIs, debugging legacy codebase, and mastering the fundamentals of JavaScript and CSS.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 px-4 z-10 relative bg-black bg-opacity-40 reveal">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center brand-font neon-text">_SKILL_MATRIX</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Skill 1 -->
+                <div class="glass-panel p-6 rounded">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-bold tracking-wider">HTML / CSS / Tailwind</span>
+                        <span class="text-cyan-400">95%</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5">
+                        <div class="bg-cyan-500 h-2.5 rounded-full" style="width: 95%; box-shadow: 0 0 10px #00f3ff;"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="glass-panel p-6 rounded">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-bold tracking-wider">JavaScript / ES6+</span>
+                        <span class="text-cyan-400">90%</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5">
+                        <div class="bg-cyan-500 h-2.5 rounded-full" style="width: 90%; box-shadow: 0 0 10px #00f3ff;"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="glass-panel p-6 rounded">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-bold tracking-wider">React / Next.js</span>
+                        <span class="text-cyan-400">85%</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5">
+                        <div class="bg-cyan-500 h-2.5 rounded-full" style="width: 85%; box-shadow: 0 0 10px #00f3ff;"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="glass-panel p-6 rounded">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-bold tracking-wider">Node.js / Python</span>
+                        <span class="text-cyan-400">80%</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5">
+                        <div class="bg-cyan-500 h-2.5 rounded-full" style="width: 80%; box-shadow: 0 0 10px #00f3ff;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4 z-10 relative reveal">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center brand-font neon-text">_SYSTEM_ARCHIVES</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Project Card 1 -->
+                <div class="glass-panel rounded-lg overflow-hidden group tilt-card">
+                    <div class="h-48 bg-gray-900 border-b border-cyan-800 flex justify-center items-center relative overflow-hidden tilt-card-content">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=500&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition duration-500 group-hover:scale-110"></div>
+                        <div class="z-10 bg-black bg-opacity-70 px-4 py-2 rounded text-cyan-400 font-bold border border-cyan-500 backdrop-blur-sm">PROJ_01</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 brand-font">Neural Network UI</h3>
+                        <p class="text-gray-400 text-sm mb-4">Ek advanced dashboard banaya AI data visualize karne ke liye with interactive charts.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">React</span>
+                            <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">Three.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="glass-panel rounded-lg overflow-hidden group tilt-card">
+                    <div class="h-48 bg-gray-900 border-b border-cyan-800 flex justify-center items-center relative overflow-hidden tilt-card-content">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=500&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition duration-500 group-hover:scale-110"></div>
+                        <div class="z-10 bg-black bg-opacity-70 px-4 py-2 rounded text-cyan-400 font-bold border border-cyan-500 backdrop-blur-sm">PROJ_02</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 brand-font">Crypto Tracker App</h3>
+                        <p class="text-gray-400 text-sm mb-4">Live cryptocurrency rates aur market analysis track karne wali web application.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">JS</span>
+                            <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="glass-panel rounded-lg overflow-hidden group tilt-card">
+                    <div class="h-48 bg-gray-900 border-b border-cyan-800 flex justify-center items-center relative overflow-hidden tilt-card-content">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618044733300-9472054094ee?q=80&w=500&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition duration-500 group-hover:scale-110"></div>
+                        <div class="z-10 bg-black bg-opacity-70 px-4 py-2 rounded text-cyan-400 font-bold border border-cyan-500 backdrop-blur-sm">PROJ_03</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 brand-font">Cyber Security Blog</h3>
+                        <p class="text-gray-400 text-sm mb-4">High-tech theme wala blog platform jisme security concepts share kiye jate hain.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">Next.js</span>
+                            <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">Tailwind</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 z-10 relative bg-black bg-opacity-60 reveal">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center brand-font neon-text">_ESTABLISH_CONNECTION</h2>
+            
+            <!-- Updated dynamic contact form targeting Web3Forms with high-tech custom parameters -->
+            <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="glass-panel p-8 rounded-lg">
+                <!-- Web3Forms Access Key Hidden Input -->
+                <input type="hidden" name="access_key" value="1aa07ebd-4d52-4bb0-85ed-1958bd657d33">
+                <!-- Custom From Name of the Email -->
+                <input type="hidden" name="from_name" value="PORTFOLIO CORE UPLINK INTERFACE">
+                <!-- Fallback custom subject (will be overridden by our JS dynamic script on transmit) -->
+                <input type="hidden" name="subject" value="New Uplink from Portfolio Terminal Connection">
+                <!-- Anti-Spam HoneyPot -->
+                <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
+                <!-- Core required details -->
+                <div class="grid grid-cols-1 gap-6 mb-6">
+                    <div>
+                        <label class="block text-cyan-400 text-sm font-bold mb-2 brand-font">USER_ID (Name) *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-cyan-500/80">
+                                <i class="fas fa-user-circle"></i>
+                            </span>
+                            <!-- Custom formatted name attribute to display beautifully in developers email inbox -->
+                            <input type="text" name="👤 [USER_ID / SENDER_CODENAME]" required placeholder="Enter terminal nickname" class="w-full bg-black bg-opacity-50 border border-cyan-800 rounded py-3 pl-10 pr-4 text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_10px_#00f3ff] transition placeholder:text-gray-600">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ALTERNATIVE SOCIAL SOURCE CHANNELS (OPTIONAL - FILL AT LEAST 1 OR 2 TO PROCEED) -->
+                <div class="mb-8 border border-cyan-900/50 bg-cyan-950/10 p-5 rounded-lg relative">
+                    <div class="brand-font text-xs font-bold text-cyan-400 mb-4 tracking-widest border-b border-cyan-900 pb-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <span class="text-red-400 animate-pulse">[ COMPULSORY: FILL AT LEAST 1 OR 2 CHANNELS ]</span>
+                        <span class="text-[10px] text-cyan-500 uppercase font-sans">Required so Developer can contact you back</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <!-- Primary Email ID Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">EMAIL COMM ADDRESS</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-cyan-400">
+                                    <i class="fas fa-envelope text-base"></i>
+                                </span>
+                                <input type="email" id="form-email" name="📧 [EMAIL_COMM_ADDRESS]" placeholder="your.comms@relay.net" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- Instagram ID Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">INSTAGRAM PROFILE</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-pink-500">
+                                    <i class="fab fa-instagram text-base"></i>
+                                </span>
+                                <input type="text" id="form-insta" name="📸 [INSTAGRAM_PROFILE_LINK]" placeholder="@username" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- GitHub ID Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">GITHUB PROFILE</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white">
+                                    <i class="fab fa-github text-base"></i>
+                                </span>
+                                <input type="text" id="form-github" name="💻 [GITHUB_REPOS_ACCESS]" placeholder="username" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- LinkedIn Account Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">LINKEDIN ACCOUNT</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-blue-400">
+                                    <i class="fab fa-linkedin text-base"></i>
+                                </span>
+                                <input type="text" id="form-linkedin" name="💼 [LINKEDIN_PROFESSIONAL_NODES]" placeholder="username" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- Twitter Account Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">TWITTER / X ACCOUNT</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-200">
+                                    <i class="fab fa-x-twitter text-base"></i>
+                                </span>
+                                <input type="text" id="form-twitter" name="🐦 [TWITTER_X_UPLINK]" placeholder="@handle" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Number Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">WHATSAPP NUMBER</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-green-500">
+                                    <i class="fab fa-whatsapp text-base"></i>
+                                </span>
+                                <input type="tel" id="form-whatsapp" name="💬 [WHATSAPP_COMMS_DIAL]" placeholder="+91 XXXXX XXXXX" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- Phone Number Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">PHONE NUMBER</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-amber-500">
+                                    <i class="fas fa-mobile-alt text-base"></i>
+                                </span>
+                                <input type="tel" id="form-phone" name="📞 [SECURE_DIRECT_PHONE_LINE]" placeholder="Direct terminal line" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+
+                        <!-- Snapchat ID Input -->
+                        <div>
+                            <label class="block text-cyan-500/80 text-[11px] font-bold mb-1 tracking-wider">SNAPCHAT ID</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-yellow-400">
+                                    <i class="fab fa-snapchat text-base"></i>
+                                </span>
+                                <input type="text" id="form-snap" name="👻 [SNAPCHAT_SECURE_HANDLE]" placeholder="Snap username" class="contact-option-field w-full bg-black bg-opacity-60 border border-cyan-900/80 rounded py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_8px_rgba(0,243,255,0.4)] transition placeholder:text-gray-700">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-cyan-400 text-sm font-bold mb-2 brand-font">DATA_PACKET (Message) *</label>
+                    <textarea name="📝 [TRANSMITTED_DATA_PACKET_MESSAGE]" rows="5" required placeholder="Type your core mission log here..." class="w-full bg-black bg-opacity-50 border border-cyan-800 rounded py-3 px-4 text-white focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_10px_#00f3ff] transition placeholder:text-gray-700"></textarea>
+                </div>
+                
+                <button type="submit" class="neon-btn w-full py-4 rounded font-bold tracking-widest brand-font text-lg transition-all duration-300">
+                    <i class="fas fa-paper-plane mr-2"></i> TRANSMIT DATA
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Sleek High-Tech Toast Notification Alert Box instead of Default alert() -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none max-w-sm w-full">
+        <div class="glass-panel p-4 rounded border-l-4 border-l-cyan-400 flex items-center gap-3 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+            <i id="toast-icon" class="fas fa-info-circle text-cyan-400 text-xl"></i>
+            <div>
+                <div id="toast-title" class="brand-font font-bold text-sm text-cyan-400">SYSTEM MSG</div>
+                <div id="toast-message" class="text-xs text-gray-300 mt-1">Establishing secure satellite data tunnel...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center border-t border-cyan-900 bg-black z-10 relative">
+        <div class="flex justify-center space-x-6 mb-4">
+            <a href="#" class="text-gray-500 hover:text-cyan-400 text-2xl transition"><i class="fab fa-github"></i></a>
+            <a href="#" class="text-gray-500 hover:text-cyan-400 text-2xl transition"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="text-gray-500 hover:text-cyan-400 text-2xl transition"><i class="fab fa-twitter"></i></a>
+        </div>
+        <p class="text-gray-600 text-sm font-bold brand-font">© 2024 SYSTEM ADMIN. ALL PROTOCOLS OBSERVED.</p>
+    </footer>
+
+    <!-- JavaScript For Interactions and Canvas Animation -->
+    <script>
+        // --- Sleek Custom Notification Utility ---
+        function showToast(title, message, isSuccess = true) {
+            const toast = document.getElementById('toast-notification');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            const panel = toast.querySelector('.glass-panel');
+            
+            toastTitle.innerText = title;
+            toastMsg.innerText = message;
+            
+            if (isSuccess) {
+                panel.style.borderLeftColor = '#00f3ff';
+                toastTitle.style.color = '#00f3ff';
+                toastIcon.className = 'fas fa-check-circle text-cyan-400 text-xl';
+                panel.style.boxShadow = '0 0 15px rgba(0, 243, 255, 0.2)';
+            } else {
+                panel.style.borderLeftColor = '#ff003c';
+                toastTitle.style.color = '#ff003c';
+                toastIcon.className = 'fas fa-exclamation-triangle text-red-500 text-xl';
+                panel.style.boxShadow = '0 0 15px rgba(255, 0, 60, 0.2)';
+            }
+            
+            // Show toast
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            // Hide after 6 seconds
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 6000);
+        }
+
+        // --- High-Tech Contact Form Submission via Fetch API (AJAX) ---
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Custom multi-field validation to guarantee the developer can respond:
+            const optionFields = document.querySelectorAll('.contact-option-field');
+            let filledCount = 0;
+            const activeChannels = [];
+            
+            // Channel mappings to generate dynamic sci-fi subject text labels in inbox
+            const channelNames = {
+                'form-email': 'EMAIL',
+                'form-insta': 'INSTA_FEED',
+                'form-github': 'GITHUB_NODES',
+                'form-linkedin': 'LINKEDIN_PROFESSIONAL',
+                'form-twitter': 'TWITTER_X',
+                'form-whatsapp': 'WHATSAPP_DIAL',
+                'form-phone': 'SECURE_TELEPHONY',
+                'form-snap': 'SNAP_CHAT'
+            };
+
+            optionFields.forEach(field => {
+                if (field.value.trim() !== '') {
+                    filledCount++;
+                    if (channelNames[field.id]) {
+                        activeChannels.push(channelNames[field.id]);
+                    }
+                }
+            });
+
+            if (filledCount < 1) {
+                showToast(
+                    'TRANSMISSION LOCKED', 
+                    'Error: Please fill in at least 1 alternative contact link (e.g. WhatsApp, Email, Instagram, etc.) so developer can connect back.', 
+                    false
+                );
+                return; 
+            }
+            
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnHTML = submitBtn.innerHTML;
+            
+            // Show processing loader state
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = "0.7";
+            submitBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> ENCRYPTING & TRANSMITTING...';
+            
+            const formData = new FormData(contactForm);
+            
+            // --- 🚀 MAIN MAGIC: URL TRANSFORMATION LOGIC START 🚀 ---
+            // Yeh block background mein form input (@username etc) ko 
+            // proper clickable URLs (https://...) mein convert karta hai,
+            // jisse developer ka email client usko instantly blue clickable link bana de!
+            
+            const formatLink = (key, prefix, isPhone = false) => {
+                let val = formData.get(key);
+                if (val && val.trim() !== '') {
+                    val = val.trim();
+                    // Agar user ne galti se khud poora https link dal diya, toh ignore karo
+                    if (val.startsWith('http://') || val.startsWith('https://')) {
+                        return; 
+                    }
+                    
+                    if (isPhone) {
+                        // Phone numbers me se sirf numbers nikalna
+                        let cleanNum = val.replace(/[^0-9+]/g, '');
+                        // WhatsApp link aur aam text dono generate karna 
+                        formData.set(key, `${prefix}${cleanNum} (Dial: ${val})`);
+                    } else {
+                        // Usernames me se '@' wagera hata dena
+                        let cleanHandle = val.replace(/^@/, '');
+                        // Agar domain bhi daal diya ho par https na lagaya ho
+                        cleanHandle = cleanHandle.replace(/^(github\.com\/|linkedin\.com\/in\/|x\.com\/|twitter\.com\/)/, '');
+                        // Formdata mein original value replace kardo with Full Clickable URL
+                        formData.set(key, `${prefix}${cleanHandle}`);
+                    }
+                }
+            };
+
+            // Calling the transformer for each specific network
+            formatLink('📸 [INSTAGRAM_PROFILE_LINK]', 'https://instagram.com/');
+            formatLink('💻 [GITHUB_REPOS_ACCESS]', 'https://github.com/');
+            formatLink('💼 [LINKEDIN_PROFESSIONAL_NODES]', 'https://linkedin.com/in/');
+            formatLink('🐦 [TWITTER_X_UPLINK]', 'https://x.com/');
+            formatLink('👻 [SNAPCHAT_SECURE_HANDLE]', 'https://www.snapchat.com/add/');
+            formatLink('💬 [WHATSAPP_COMMS_DIAL]', 'https://wa.me/', true);
+            // Email waise hi chhod diya kyonki email waise bhi default clickable ban jate hain inboxes mein
+            // --- 🚀 URL TRANSFORMATION LOGIC END 🚀 ---
+
+            // Build and override dynamic custom high-tech subject line
+            const senderName = formData.get('👤 [USER_ID / SENDER_CODENAME]') || 'UNKNOWN_AGENT';
+            const generatedSubject = `📡 [UPLINK DECRYPTED] Message from ${senderName.toUpperCase()} via [${activeChannels.join(', ')}]`;
+            formData.set('subject', generatedSubject);
+            
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status === 200 || json.success) {
+                    showToast('TRANSMISSION SUCCESSFUL', 'Message and active uplinks dispatched securely to developer core database.', true);
+                    contactForm.reset();
+                } else {
+                    showToast('TRANSMISSION FAILURE', json.message || 'System network error occurred during uplink upload.', false);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                showToast('OFFLINE ERROR', 'Failed to connect to transmission relays. Check terminal internet connection.', false);
+            })
+            .then(() => {
+                // Restore button state
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.innerHTML = originalBtnHTML;
+            });
+        });
+
+        // 1. Image Upload Logic (Profile Photo Change)
+        const uploadInput = document.getElementById('profile-upload');
+        const profilePic = document.getElementById('profile-pic');
+
+        uploadInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    profilePic.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 2. Typing Effect Logic
+        const textArray = ["Web Developer", "Cyber Enthusiast", "UI/UX Designer", "Tech Innovator"];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById('typing-text');
+
+        function typeEffect() {
+            const currentWord = textArray[textIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            // Typing speed control
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000; // Pause at end of word
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % textArray.length;
+                typeSpeed = 500; // Pause before new word
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+        
+        // Start typing effect
+        setTimeout(typeEffect, 1000);
+
+        // 3. High-Tech Matrix Binary Canvas Background
+        const canvas = document.getElementById('binary-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Resize canvas to full window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Matrix characters (Binary + numbers/letters)
+        const chars = "0101010101010101010101 SYSTEM ERROR HACK WEB DEV < > / [ ] { }";
+        const charArray = chars.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        // Draw the rain
+        function drawMatrix() {
+            // Semi-transparent black background to create trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Neon cyan text
+            ctx.fillStyle = '#00f3ff'; 
+            ctx.font = fontSize + 'px "Share Tech Mono"';
+
+            for (let i = 0; i < drops.length; i++) {
+                // Get random character
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                
+                // Draw character
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Reset drop to top randomly to create varied rain
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Move drop down
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 33); // Approx 30 FPS
+
+        // 4. Custom Cursor Tracking Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        // Only run cursor code on devices that support hover (desktop)
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 150, fill: "forwards" });
+            });
+        }
+
+        // 5. System Boot Screen Animation
+        const bootScreen = document.getElementById('boot-screen');
+        const bootText = document.getElementById('boot-text');
+        const bootLines = [
+            "SYS_ADMIN: INITIALIZING KERNEL...",
+            "LOADING NEURAL MODULES... [OK]",
+            "MOUNTING VIRTUAL FILESYSTEM... [OK]",
+            "ESTABLISHING SECURE CONNECTION...",
+            "DECRYPTING PORTFOLIO DATA...",
+            "ACCESS GRANTED."
+        ];
+        
+        let lineIndex = 0;
+        function showBootText() {
+            if (lineIndex < bootLines.length) {
+                bootText.innerHTML += `> ${bootLines[lineIndex]}<br>`;
+                lineIndex++;
+                setTimeout(showBootText, Math.random() * 300 + 150); // Random typing speed
+            } else {
+                setTimeout(() => {
+                    bootScreen.style.transition = "opacity 0.8s ease-out, transform 0.8s ease-out";
+                    bootScreen.style.opacity = "0";
+                    bootScreen.style.transform = "scale(1.1)";
+                    setTimeout(() => bootScreen.style.display = "none", 800);
+                }, 600);
+            }
+        }
+        window.addEventListener('load', () => {
+            setTimeout(showBootText, 400); // Start boot sequence shortly after load
+        });
+
+        // 6. Scroll Reveal (Intersection Observer)
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target); // Reveal only once
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        
+        reveals.forEach(reveal => revealObserver.observe(reveal));
+
+        // 7. 3D Tilt Effect for Project Cards
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation (max 12 degrees)
+                const rotateX = ((y - centerY) / centerY) * -12; 
+                const rotateY = ((x - centerX) / centerX) * 12;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = `transform 0.5s ease`;
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = `none`; // Remove transition during continuous move
+            });
+        });
+
+    </script>
+</body>
+</html>
